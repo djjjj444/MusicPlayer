@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity{
     private MediaPlayer mediaPlayer=new MediaPlayer();
     private SeekBar seekBar;
     private Timer timer;
+    private int currentposition;
+    private int nextposition;
+    private int backposition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +46,8 @@ public class MainActivity extends AppCompatActivity{
         lv.setAdapter(listAdepter);
         final Handler handler=new Handler();
         Button play=(Button)findViewById(R.id.play);
-        Button pause=(Button)findViewById(R.id.pause);
-        Button stop=(Button)findViewById(R.id.stop);
+        final Button back=(Button)findViewById(R.id.back);
+        final Button next=(Button)findViewById(R.id.next);
         final TextView tv1=(TextView)findViewById(R.id.tv1);
         final TextView tv2=(TextView)findViewById(R.id.tv2);
         seekBar=(SeekBar)findViewById(R.id.seekbar);
@@ -69,6 +72,19 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Song song = list.get(position);
+                currentposition=position;
+                if(currentposition==list.size()-1) {
+                   backposition=currentposition-1;
+                   nextposition=0;
+                }
+                else if (currentposition==0){
+                    backposition=list.size()-1;
+                    nextposition=currentposition+1;
+                }
+                else {
+                    nextposition = currentposition + 1;
+                    backposition = currentposition - 1;
+                }
                 seekBar.setMax(song.duration);
                 seekBar.setProgress(0);
                 tv1.setText(song.song);
@@ -96,6 +112,7 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
+        System.out.println(currentposition+"   "+nextposition+"   "+backposition);
         play.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -107,6 +124,66 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+        back.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Song song=list.get(backposition);
+                if(backposition==0){
+                    currentposition=backposition;
+                    nextposition=currentposition+1;
+                    backposition=list.size()-1;
+                }
+                else {
+                    currentposition = backposition;
+                    nextposition = currentposition + 1;
+                    backposition = currentposition - 1;
+                }
+                seekBar.setMax(song.duration);
+                tv1.setText(song.song);
+                tv2.setText(song.singer);
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(song.path);
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        next.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Song song = list.get(nextposition);
+                if (nextposition==0) {
+                    currentposition=nextposition;
+                    backposition = list.size() - 1;
+                    nextposition+=1;
+                } else if(nextposition==list.size()-1){
+                    currentposition=nextposition;
+                    backposition=currentposition-1;
+                    nextposition=0;
+                }
+                else{
+                    currentposition = nextposition;
+                    backposition = currentposition - 1;
+                    nextposition = currentposition + 1;
+                }
+                    seekBar.setMax(song.duration);
+                    tv1.setText(song.song);
+                    tv2.setText(song.singer);
+                    try {
+                        mediaPlayer.reset();
+                        mediaPlayer.setDataSource(song.path);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+        });
+
         seekProcess();
 
     }

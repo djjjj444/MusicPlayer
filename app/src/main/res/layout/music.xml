@@ -29,25 +29,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/seekbar"/>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="play"
+        android:layout_centerInParent="true"
+        android:text="播放/暂停"
+        android:background="#FFFFFF"
         android:id="@+id/play"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="pause"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/pause"/>
+        android:text="上一曲"
+        android:background="#FFFFFF"
+        android:layout_alignParentLeft="@+id/play"
+        android:id="@+id/back"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="stop"
-        android:id="@+id/stop"/>
-    </LinearLayout>
+        android:text="下一曲"
+        android:background="#FFFFFF"
+        android:layout_alignParentRight="true"
+        android:id="@+id/next"/>
+    </RelativeLayout>
 </LinearLayout>
