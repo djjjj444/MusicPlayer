@@ -2,6 +2,7 @@ package com.example.musicplayer;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import java.util.ArrayList;
@@ -10,7 +11,9 @@ import java.util.List;
 public class MusicList {
     public static List<Song> getMusicdate(Context context){
         List<Song> list=new ArrayList<Song>();
-        Cursor cursor=context.getContentResolver().query(MediaStore.Audio.Media .INTERNAL_CONTENT_URI,null,null,
+        String volumeName = "external";
+        Uri URI= MediaStore.Files.getContentUri(volumeName);
+        Cursor cursor=context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null,null,
                 null, MediaStore.Audio.AudioColumns.IS_MUSIC);
         if(cursor!=null){
             while (cursor.moveToNext()) {

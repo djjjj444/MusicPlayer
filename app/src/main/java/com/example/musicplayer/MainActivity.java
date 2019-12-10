@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.File;
@@ -32,17 +33,61 @@ public class MainActivity extends AppCompatActivity{
         Button play=(Button)findViewById(R.id.play);
         Button pause=(Button)findViewById(R.id.pause);
         Button stop=(Button)findViewById(R.id.stop);
+        final SeekBar seekBar=(SeekBar)findViewById(R.id.seekbar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Song song=list.get(position);
-                try {
-                    mediaPlayer.setDataSource(song.path);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                Song song = list.get(position);
+                if (!mediaPlayer.isPlaying()) {
+                    try {
+                        mediaPlayer.setDataSource(song.path);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                        seekBar.setMax(song.duration);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    mediaPlayer.reset();
+                    try {
+                        mediaPlayer.setDataSource(song.path);
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mediaPlayer.start();
                 }
             }
         });
+        play.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(!mediaPlayer.isPlaying()){
+                    mediaPlayer.start();
+                }
+                else{
+                    mediaPlayer.pause();
+                }
+            }
+        });
+
     }
 
 
