@@ -40,6 +40,7 @@ public class ListAdepter extends BaseAdapter {
             holder.song=(TextView) convertView.findViewById(R.id.songs);
             holder.singer=(TextView) convertView.findViewById(R.id.singer);
             holder.position=(TextView) convertView.findViewById(R.id.num);
+            holder.duration=(TextView) convertView.findViewById(R.id.duration);
             convertView.setTag(holder);
         }
         else{
@@ -48,6 +49,9 @@ public class ListAdepter extends BaseAdapter {
         holder.song.setText(list.get(position).song.toString());
         holder.singer.setText(list.get(position).singer.toString());
         holder.position.setText(position+1+"");
+        int durtion=list.get(position).duration;
+        String time=MusicList.formatTime(durtion);
+        holder.duration.setText(time);
         return convertView;
     }
     class ViewHolder{
