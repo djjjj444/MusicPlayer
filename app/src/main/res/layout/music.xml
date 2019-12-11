@@ -49,6 +49,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/play"
+        android:layout_toLeftOf="@+id/next"
+        android:background="#FFFFFF"
+        android:id="@+id/moshi" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="下一曲"
         android:background="#FFFFFF"
         android:layout_alignParentRight="true"
