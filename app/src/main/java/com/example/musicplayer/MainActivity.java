@@ -37,16 +37,16 @@ public class MainActivity extends AppCompatActivity{
     private int nextposition;
     private int backposition;
     private boolean aBoolean=false;
+    private List<Song> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.music);
-        final List<Song> list=MusicList.getMusicdate(this);
-        ListAdepter listAdepter=new ListAdepter(this,list);
+        list=MusicList.getMusicdate(this);
+        final ListAdepter listAdepter=new ListAdepter(this,list);
         ListView lv=(ListView)findViewById(R.id.lv);
         lv.setAdapter(listAdepter);
-        final Handler handler=new Handler();
         Button play=(Button)findViewById(R.id.play);
         final Button back=(Button)findViewById(R.id.back);
         final Button next=(Button)findViewById(R.id.next);
@@ -61,12 +61,10 @@ public class MainActivity extends AppCompatActivity{
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mediaPlayer.seekTo(seekBar.getProgress());
@@ -77,18 +75,7 @@ public class MainActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Song song = list.get(position);
                 currentposition=position;
-                if(currentposition==list.size()-1) {
-                   backposition=currentposition-1;
-                   nextposition=0;
-                }
-                else if (currentposition==0){
-                    backposition=list.size()-1;
-                    nextposition=currentposition+1;
-                }
-                else {
-                    nextposition = currentposition + 1;
-                    backposition = currentposition - 1;
-                }
+                getposition();
                 seekBar.setMax(song.duration);
                 seekBar.setProgress(0);
                 tv1.setText(song.song);
@@ -103,20 +90,31 @@ public class MainActivity extends AppCompatActivity{
                     }
                 }
                 else{
+                    mediaPlayer.stop();
                     mediaPlayer.reset();
+                    seekBar.setProgress(0);
                     try {
                         mediaPlayer.setDataSource(song.path);
                         mediaPlayer.prepare();
+                        mediaPlayer.start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mediaPlayer.start();
                     seekBar.setProgress(0);
                 }
 
             }
         });
-        System.out.println(currentposition+"   "+nextposition+"   "+backposition);
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                list.remove(position);
+                ListView lv=(ListView)findViewById(R.id.lv);
+                ListAdepter listAdepter1=new ListAdepter(MainActivity.this,list);
+                lv.setAdapter(listAdepter1);
+                return true;
+            }
+        });
         play.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -133,15 +131,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v){
                 if(aBoolean==false) {
                     Song song = list.get(backposition);
-                    if (backposition == 0) {
-                        currentposition = backposition;
-                        nextposition = currentposition + 1;
-                        backposition = list.size() - 1;
-                    } else {
-                        currentposition = backposition;
-                        nextposition = currentposition + 1;
-                        backposition = currentposition - 1;
-                    }
+                    currentposition = backposition;
+                    seekBar.setProgress(0);
                     seekBar.setMax(song.duration);
                     tv1.setText(song.song);
                     tv2.setText(song.singer);
@@ -159,6 +150,7 @@ public class MainActivity extends AppCompatActivity{
                     Random random=new Random();
                     currentposition=random.nextInt(list.size());
                     Song song=list.get(currentposition);
+                    seekBar.setProgress(0);
                     seekBar.setMax(song.duration);
                     tv1.setText(song.song);
                     tv2.setText(song.singer);
@@ -171,8 +163,8 @@ public class MainActivity extends AppCompatActivity{
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
+                getposition();
             }
         });
         next.setOnClickListener(new View.OnClickListener(){
@@ -180,19 +172,8 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if(aBoolean==false) {
                     Song song = list.get(nextposition);
-                    if (nextposition == 0) {
-                        currentposition = nextposition;
-                        backposition = list.size() - 1;
-                        nextposition += 1;
-                    } else if (nextposition == list.size() - 1) {
-                        currentposition = nextposition;
-                        backposition = currentposition - 1;
-                        nextposition = 0;
-                    } else {
-                        currentposition = nextposition;
-                        backposition = currentposition - 1;
-                        nextposition = currentposition + 1;
-                    }
+                    currentposition = nextposition;
+                    seekBar.setProgress(0);
                     seekBar.setMax(song.duration);
                     tv1.setText(song.song);
                     tv2.setText(song.singer);
@@ -210,6 +191,7 @@ public class MainActivity extends AppCompatActivity{
                     Random random=new Random();
                     currentposition=random.nextInt(list.size());
                     Song song=list.get(currentposition);
+                    seekBar.setProgress(0);
                     seekBar.setMax(song.duration);
                     tv1.setText(song.song);
                     tv2.setText(song.singer);
@@ -223,16 +205,16 @@ public class MainActivity extends AppCompatActivity{
                         e.printStackTrace();
                     }
                 }
+                getposition();
             }
-
         });
         moshi.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 if(aBoolean){
-                    aBoolean=false;
                     Button button = findViewById(R.id.moshi);
                     button.setText("顺序播放");
+                    aBoolean=false;
                     return;
                 }
                 if(aBoolean==false){
@@ -250,20 +232,10 @@ public class MainActivity extends AppCompatActivity{
                 if(aBoolean==false){
                     Song song=list.get(nextposition);
                     currentposition=nextposition;
-                    if(currentposition==0){
-                        backposition=list.size()-1;
-                        nextposition=currentposition+1;
-                    }
-                    else if(currentposition==list.size()-1){
-                        backposition=currentposition-1;
-                        nextposition=0;
-                    }
-                    else{
-                        nextposition=currentposition+1;
-                        backposition=currentposition-1;
-                    }
                     tv1.setText(song.song);
                     tv2.setText(song.singer);
+                    seekBar.setProgress(0);
+                    seekBar.setMax(song.duration);
                     try {
                         mediaPlayer.stop();
                         mediaPlayer.reset();
@@ -273,6 +245,7 @@ public class MainActivity extends AppCompatActivity{
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    getposition();
                 }
                 else{
                     Random random=new Random();
@@ -280,6 +253,8 @@ public class MainActivity extends AppCompatActivity{
                     Song song=list.get(currentposition);
                     tv1.setText(song.song);
                     tv2.setText(song.singer);
+                    seekBar.setMax(song.duration);
+                    seekBar.setProgress(0);
                     try {
                         mediaPlayer.stop();
                         mediaPlayer.reset();
@@ -290,6 +265,7 @@ public class MainActivity extends AppCompatActivity{
                         e.printStackTrace();
                     }
                 }
+                getposition();
             }
         });
         seekProcess();
@@ -306,5 +282,20 @@ public class MainActivity extends AppCompatActivity{
                 seekBar.setProgress(i);
             }
         },0,200);
+    }
+
+    public void getposition(){
+        if(currentposition==0){
+            nextposition=currentposition+1;
+            backposition=list.size()-1;
+        }
+        else if(currentposition==list.size()-1){
+            nextposition=0;
+            backposition=currentposition-1;
+        }
+        else{
+            nextposition=currentposition+1;
+            backposition=currentposition-1;
+        }
     }
 }
