@@ -33,32 +33,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:text="播放/暂停"
-        android:background="#FFFFFF"
+        android:background="@drawable/bofang"
         android:id="@+id/play"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="上一曲"
-        android:background="#FFFFFF"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/shang"
         android:layout_alignParentLeft="@+id/play"
         android:id="@+id/back"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/play"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_toLeftOf="@+id/next"
         android:background="#FFFFFF"
         android:id="@+id/moshi" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="下一曲"
-        android:background="#FFFFFF"
-        android:layout_alignParentRight="true"
-        android:id="@+id/next"/>
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/xia" />
     </RelativeLayout>
 </LinearLayout>

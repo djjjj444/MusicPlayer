@@ -1,5 +1,6 @@
 package com.example.musicplayer;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -7,8 +8,10 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.wifi.aware.DiscoverySession;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -28,6 +31,9 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.example.musicplayer.R.drawable.pause;
+import static com.example.musicplayer.R.drawable.zanting;
+
 public class MainActivity extends AppCompatActivity{
 
     private MediaPlayer mediaPlayer=new MediaPlayer();
@@ -43,18 +49,22 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.music);
+        mediaPlayer.stop();
+        mediaPlayer.reset();
         list=MusicList.getMusicdate(this);
         final ListAdepter listAdepter=new ListAdepter(this,list);
         ListView lv=(ListView)findViewById(R.id.lv);
         lv.setAdapter(listAdepter);
-        Button play=(Button)findViewById(R.id.play);
+        final Button play=(Button)findViewById(R.id.play);
         final Button back=(Button)findViewById(R.id.back);
         final Button next=(Button)findViewById(R.id.next);
         final TextView tv1=(TextView)findViewById(R.id.tv1);
         final TextView tv2=(TextView)findViewById(R.id.tv2);
         final Button moshi=(Button) findViewById(R.id.moshi);
-        moshi.setText("顺序播放");
         seekBar=(SeekBar)findViewById(R.id.seekbar);
+        seekBar.setProgress(0);
+        play.setBackgroundResource(zanting);
+        moshi.setBackgroundResource(R.drawable.shunxu);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -68,6 +78,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mediaPlayer.seekTo(seekBar.getProgress());
+
             }
         });
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -102,7 +113,7 @@ public class MainActivity extends AppCompatActivity{
                     }
                     seekBar.setProgress(0);
                 }
-
+                play.setBackgroundResource(R.drawable.bofang);
             }
         });
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -116,13 +127,16 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         play.setOnClickListener(new View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onClick(View v){
                 if(!mediaPlayer.isPlaying()){
                     mediaPlayer.start();
+                    play.setBackgroundResource(R.drawable.bofang);
                 }
                 else{
                     mediaPlayer.pause();
+                    play.setBackgroundResource(zanting);
                 }
             }
         });
@@ -164,6 +178,7 @@ public class MainActivity extends AppCompatActivity{
                         e.printStackTrace();
                     }
                 }
+                play.setBackgroundResource(R.drawable.bofang);
                 getposition();
             }
         });
@@ -205,6 +220,7 @@ public class MainActivity extends AppCompatActivity{
                         e.printStackTrace();
                     }
                 }
+                play.setBackgroundResource(R.drawable.bofang);
                 getposition();
             }
         });
@@ -213,13 +229,13 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v){
                 if(aBoolean){
                     Button button = findViewById(R.id.moshi);
-                    button.setText("顺序播放");
+                    button.setBackgroundResource(R.drawable.shunxu);
                     aBoolean=false;
                     return;
                 }
                 if(aBoolean==false){
                     Button button = findViewById(R.id.moshi);
-                    button.setText("随机播放");
+                    button.setBackgroundResource(R.drawable.suiji);
                     aBoolean=true;
                     return;
                 }
@@ -265,6 +281,7 @@ public class MainActivity extends AppCompatActivity{
                         e.printStackTrace();
                     }
                 }
+                play.setBackgroundResource(R.drawable.bofang);
                 getposition();
             }
         });
