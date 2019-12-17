@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity{
     private int nextposition;
     private int backposition;
     private boolean aBoolean=false;
-    private List<Song> list;
+    private List<Song> list=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
